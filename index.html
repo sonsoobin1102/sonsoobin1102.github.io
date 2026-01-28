@@ -1,0 +1,352 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { Mail, ArrowRight, Github, Terminal, Moon, Sun, ChevronDown, Cpu, Gamepad2, Globe, Smartphone, BrainCircuit, User } from 'lucide-react';
+
+// 스크롤 애니메이션을 위한 재사용 컴포넌트
+const FadeIn = ({ children, delay = 0 }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const domRef = useRef();
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      });
+    });
+    const { current } = domRef;
+    if (current) observer.observe(current);
+    return () => {
+      if (current) observer.unobserve(current);
+    };
+  }, []);
+
+  return (
+    <div
+      ref={domRef}
+      className={`transition-all duration-1000 ease-out transform ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+      }`}
+      style={{ transitionDelay: `${delay}ms` }}
+    >
+      {children}
+    </div>
+  );
+};
+
+const App = () => {
+  const [email, setEmail] = useState('');
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  // 디폴트를 다크모드로 설정 (true)
+  const [darkMode, setDarkMode] = useState(true);
+
+  // 다크모드 토글 핸들러
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (email) {
+      setIsSubmitted(true);
+      setTimeout(() => {
+        setIsSubmitted(false);
+        setEmail('');
+      }, 3000);
+    }
+  };
+
+  // 기술 스택 데이터
+  const skills = [
+    { name: 'C', icon: 'https://cdn.simpleicons.org/c/A8B9CC', level: 'Advanced' },
+    { name: 'Python', icon: 'https://cdn.simpleicons.org/python/3776AB', level: 'Intermediate' },
+    { name: 'C++', icon: 'https://cdn.simpleicons.org/cplusplus/00599C', level: 'Intermediate' },
+    // C# 아이콘 URL 변경 (더 안정적인 소스로 교체)
+    { name: 'C#', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg', level: 'Basic' },
+  ];
+
+  return (
+    <div className={darkMode ? "dark" : ""}>
+      <div className="min-h-screen font-sans transition-colors duration-500 bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100 selection:bg-indigo-500 selection:text-white">
+        
+        {/* 네비게이션 바 */}
+        <nav className="fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300 bg-white/80 backdrop-blur-md border-slate-200 dark:bg-slate-900/80 dark:border-slate-800">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center h-16">
+              <div className="text-xl font-bold tracking-tight text-indigo-600 dark:text-indigo-400 cursor-pointer hover:scale-105 transition-transform">
+                Soobin.Dev
+              </div>
+              <div className="flex items-center space-x-6">
+                <div className="hidden md:flex space-x-6">
+                  {/* 네비게이션 링크 Hover 효과 */}
+                  {['소개', '기술 스택', '프로젝트'].map((item, idx) => {
+                    const hrefs = ['#about', '#skills', '#project'];
+                    return (
+                      <a 
+                        key={idx}
+                        href={hrefs[idx]} 
+                        className="relative text-slate-600 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-colors duration-300 font-medium group"
+                      >
+                        {item}
+                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-indigo-600 dark:bg-indigo-400 transition-all duration-300 group-hover:w-full"></span>
+                      </a>
+                    );
+                  })}
+                </div>
+                {/* 다크모드 토글 버튼 Hover 효과 */}
+                <button 
+                  onClick={toggleDarkMode}
+                  className="p-2 rounded-full bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 hover:text-indigo-600 dark:hover:text-indigo-400 hover:scale-110 active:scale-95 transition-all duration-300"
+                  aria-label="Toggle Dark Mode"
+                >
+                  {darkMode ? <Sun size={20} className="animate-spin-slow" /> : <Moon size={20} />}
+                </button>
+                <a 
+                  href="#contact" 
+                  className="hidden md:block px-5 py-2.5 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/30 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 text-sm font-medium"
+                >
+                  Contact Me
+                </a>
+              </div>
+            </div>
+          </div>
+        </nav>
+
+        {/* 히어로 섹션 */}
+        <header id="about" className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto text-center md:text-left min-h-[90vh] flex flex-col justify-center">
+          <FadeIn>
+            <div className="flex flex-col md:flex-row items-center gap-12">
+              <div className="flex-1 space-y-6">
+                <div className="inline-block px-4 py-1.5 bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300 rounded-full text-sm font-semibold mb-2 hover:scale-105 transition-transform cursor-default">
+                  💻 컴퓨터공학과 | 성장하는 개발자
+                </div>
+                <h1 className="text-4xl md:text-6xl font-extrabold leading-tight break-keep">
+                  알고리즘으로 움직이는<br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 animate-gradient">
+                    세상을 만드는
+                  </span><br />
+                  손수빈입니다.
+                </h1>
+                <p className="text-lg text-slate-600 dark:text-slate-400 max-w-xl leading-relaxed break-keep">
+                  C와 Python을 주력으로 다루며 아직 진로를 찾지못해 이것저것 해보며 진로를 찾아가고있는 개발자꿈나무입니다.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 pt-4 justify-center md:justify-start">
+                  <a 
+                    href="#project" 
+                    className="group flex items-center justify-center gap-2 px-8 py-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-300 shadow-lg hover:shadow-indigo-500/40 hover:-translate-y-1 font-bold"
+                  >
+                    프로젝트 보기 
+                    <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                  </a>
+                  <a 
+                    href="https://github.com/sonsoobin1102" 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="flex items-center justify-center gap-2 px-8 py-4 bg-white text-slate-700 border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-indigo-300 hover:text-indigo-600 hover:-translate-y-1 hover:shadow-md transition-all duration-300 font-medium dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700 dark:hover:bg-slate-750 dark:hover:border-indigo-500/50"
+                  >
+                    <Github size={20} /> GitHub 방문
+                  </a>
+                </div>
+              </div>
+              
+              {/* 프로필 이미지 영역 - 사람 아이콘으로 대체 */}
+              <div className="flex-1 relative flex justify-center group">
+                <div className="absolute inset-0 bg-gradient-to-tr from-indigo-400 to-purple-400 dark:from-indigo-600 dark:to-purple-600 rounded-full blur-3xl opacity-30 group-hover:opacity-50 transition-opacity duration-500 animate-pulse-slow"></div>
+                <div className="relative w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-8 border-white dark:border-slate-800 shadow-2xl flex items-center justify-center bg-slate-200 dark:bg-slate-700 group-hover:scale-105 transition-transform duration-500 ease-out cursor-pointer group-hover:shadow-indigo-500/20">
+                   <User size={120} className="text-slate-400 dark:text-slate-500 group-hover:text-indigo-500 transition-colors duration-300" />
+                </div>
+              </div>
+            </div>
+          </FadeIn>
+          
+          <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce hidden md:block text-slate-400 dark:text-slate-600">
+            <ChevronDown size={32} />
+          </div>
+        </header>
+
+        {/* 기술 스택 (Skills) */}
+        <section id="skills" className="py-24 px-4 max-w-6xl mx-auto">
+          <FadeIn>
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-bold mb-4">Tech Stack</h2>
+              <p className="text-slate-600 dark:text-slate-400">
+                아이콘을 통해 제가 활용할 수 있는 기술들을 한눈에 확인하세요.
+              </p>
+            </div>
+          </FadeIn>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 justify-center">
+            {skills.map((skill, index) => (
+              <FadeIn key={skill.name} delay={index * 100}>
+                {/* Tech Stack Card Hover 효과 */}
+                <div className="flex flex-col items-center justify-center p-6 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-xl hover:shadow-indigo-500/10 hover:-translate-y-2 hover:border-indigo-500/50 transition-all duration-300 h-full group cursor-default">
+                  <div className="w-16 h-16 mb-4 flex items-center justify-center bg-slate-50 dark:bg-slate-700 rounded-full group-hover:bg-indigo-50 dark:group-hover:bg-indigo-900/20 transition-colors duration-300 group-hover:scale-110">
+                    <img 
+                      src={skill.icon} 
+                      alt={skill.name} 
+                      className="w-10 h-10 object-contain group-hover:rotate-12 transition-transform duration-300"
+                    />
+                  </div>
+                  <h3 className="font-bold text-slate-900 dark:text-white mb-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{skill.name}</h3>
+                  <span className="text-xs font-medium px-2 py-1 bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 rounded-full group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/40 group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors">
+                    {skill.level}
+                  </span>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+
+          <FadeIn delay={600}>
+            <div className="mt-12 p-8 bg-slate-100 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-indigo-200 dark:hover:border-slate-600 transition-colors duration-300">
+              <div className="flex items-center gap-3 mb-6">
+                <Cpu className="text-indigo-600 dark:text-indigo-400 animate-pulse" />
+                <h3 className="text-xl font-bold">관심 분야 (Areas of Interest)</h3>
+              </div>
+              
+              {/* 관심 분야 카드 Hover 효과 */}
+              <div className="grid md:grid-cols-4 gap-4">
+                {[
+                  { icon: BrainCircuit, text: "AI" },
+                  { icon: Gamepad2, text: "게임 개발" },
+                  { icon: Globe, text: "웹 개발" },
+                  { icon: Smartphone, text: "앱 개발" }
+                ].map((item, idx) => (
+                  <div key={idx} className="flex flex-col items-center p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-indigo-500 dark:hover:border-indigo-400 hover:shadow-md hover:-translate-y-1 transition-all duration-300 group cursor-default">
+                    <item.icon className="text-indigo-500 mb-2 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300" size={28} />
+                    <span className="font-bold text-slate-700 dark:text-slate-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors">{item.text}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </FadeIn>
+        </section>
+
+        {/* 프로젝트 섹션 (Project) */}
+        <section id="project" className="py-20 bg-slate-100 dark:bg-slate-800/50">
+          <div className="max-w-6xl mx-auto px-4">
+            <FadeIn>
+              <div className="max-w-4xl mx-auto">
+                {/* 텍스트 변경: Featured Project -> 수행했던 프로젝트 */}
+                <div className="text-indigo-600 dark:text-indigo-400 font-bold mb-2 tracking-wider text-sm uppercase">수행했던 프로젝트</div>
+                <h2 className="text-3xl md:text-4xl font-bold mb-6">PC방 서빙 로봇 자율주행<br />시뮬레이션</h2>
+                
+                {/* 설명 텍스트 수정 */}
+                <p className="text-slate-600 dark:text-slate-300 text-lg leading-relaxed mb-6 break-keep">
+                  Python을 이용하여 PC방 환경에서의 서빙 로봇 자율주행을 시뮬레이션한 프로젝트이고. A*알고리즘으로 목표 좌석까지의 최적 경로를 탐색하고 DWA알고리즘을 이용한 주행하는 과정을 시각화 하였습니다.
+                </p>
+                
+                {/* 프로젝트 상세 카드 Hover 효과 */}
+                <div className="mb-8 p-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-lg hover:border-indigo-200 dark:hover:border-indigo-500/30 transition-all duration-300">
+                  <h4 className="font-bold text-slate-900 dark:text-white mb-4 text-lg">Key Features</h4>
+                  <ul className="grid md:grid-cols-2 gap-4">
+                    {[
+                      "복잡한 PC방 환경 모델링 (Grid Map) 및 장애물 설정",
+                      "A* (A-Star) 최단 경로 탐색 알고리즘 직접 구현",
+                      "DWA를 이용한 실시간 로봇 이동 및 경로 시각화",
+                      "최적화된 경로 계산 및 장애물 회피 로직"
+                    ].map((feature, idx) => (
+                      <li key={idx} className="flex items-start gap-3 text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors duration-200">
+                        <div className="mt-1.5 w-2 h-2 bg-indigo-500 rounded-full shrink-0"></div>
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="flex flex-wrap gap-2 mb-8">
+                  {['Python', 'DWA', 'A* Algorithm', 'Path Planning'].map((tag) => (
+                    <span key={tag} className="px-3 py-1 bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-md text-sm border border-slate-200 dark:border-slate-600 hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors cursor-default">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                <a 
+                  href="https://github.com/sonsoobin1102" 
+                  target="_blank" 
+                  rel="noreferrer"
+                  className="group inline-flex items-center text-indigo-600 dark:text-indigo-400 font-bold hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors"
+                >
+                  <span className="border-b-2 border-transparent group-hover:border-indigo-600 dark:group-hover:border-indigo-400 transition-all duration-300">GitHub에서 상세 코드 보기</span>
+                  <ArrowRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform" />
+                </a>
+              </div>
+            </FadeIn>
+          </div>
+        </section>
+
+        {/* Contact 섹션 */}
+        <section id="contact" className="py-24 px-4 max-w-4xl mx-auto text-center">
+          <FadeIn>
+            <div className="relative overflow-hidden bg-gradient-to-br from-indigo-600 to-purple-700 dark:from-indigo-900 dark:to-purple-900 rounded-3xl p-8 md:p-16 text-white shadow-2xl group hover:shadow-indigo-500/50 transition-shadow duration-500">
+              {/* 배경 장식 애니메이션 */}
+              <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
+              <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 bg-indigo-400 opacity-10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700 delay-100"></div>
+              
+              <div className="relative z-10">
+                <h2 className="text-3xl md:text-4xl font-bold mb-4">함께 성장하고 싶습니다</h2>
+                <p className="text-indigo-100 mb-8 max-w-xl mx-auto">
+                  프로젝트 협업 제안이나 기술적인 교류는 언제나 환영입니다.<br/>
+                  이메일을 남겨주시거나 GitHub를 방문해주세요.
+                </p>
+
+                <form onSubmit={handleSubmit} className="max-w-md mx-auto flex flex-col sm:flex-row gap-3 mb-8">
+                  <div className="flex-1 relative">
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-indigo-500" size={20} />
+                    <input 
+                      type="email" 
+                      placeholder="이메일 주소를 입력하세요" 
+                      className="w-full pl-10 pr-4 py-3 rounded-lg text-slate-900 focus:outline-none focus:ring-4 focus:ring-indigo-300/50 transition-all shadow-lg"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <button 
+                    type="submit" 
+                    className="bg-slate-900 text-white px-6 py-3 rounded-lg font-bold hover:bg-slate-800 hover:scale-105 active:scale-95 transition-all duration-300 whitespace-nowrap border border-slate-700 shadow-lg hover:shadow-xl"
+                  >
+                    연락하기
+                  </button>
+                </form>
+
+                {isSubmitted && (
+                  <div className="mb-6 p-3 bg-green-500/20 text-green-100 rounded-lg animate-fade-in backdrop-blur-sm border border-green-500/30">
+                    🎉 메세지가 전송되었습니다! (Demo)
+                  </div>
+                )}
+
+                <div className="flex justify-center gap-6 items-center pt-6 border-t border-white/20">
+                  <a href="mailto:1102ssb@gmail.com" className="flex items-center gap-2 hover:text-indigo-200 hover:scale-105 transition-all duration-300">
+                    <Mail size={20} /> 1102ssb@gmail.com
+                  </a>
+                  <a href="https://github.com/sonsoobin1102" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-indigo-200 hover:scale-105 transition-all duration-300">
+                    <Github size={20} /> sonsoobin1102
+                  </a>
+                </div>
+              </div>
+            </div>
+          </FadeIn>
+        </section>
+
+        {/* 푸터 */}
+        <footer className="bg-slate-50 dark:bg-slate-900 py-12 text-center border-t border-slate-200 dark:border-slate-800 transition-colors duration-300">
+          <div className="flex justify-center gap-6 mb-8">
+            <a href="https://github.com/sonsoobin1102" target="_blank" rel="noreferrer" className="p-3 bg-white dark:bg-slate-800 rounded-full text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:scale-110 hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
+              <Github size={24} />
+            </a>
+            <a href="mailto:1102ssb@gmail.com" className="p-3 bg-white dark:bg-slate-800 rounded-full text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:scale-110 hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
+              <Mail size={24} />
+            </a>
+          </div>
+          <p className="text-slate-500 dark:text-slate-500 text-sm">
+            © 2024 Son Soobin. All rights reserved. <br />
+            Built with React & Tailwind CSS.
+          </p>
+        </footer>
+      </div>
+    </div>
+  );
+};
+
+export default App;
