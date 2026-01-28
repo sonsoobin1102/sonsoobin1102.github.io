@@ -1,2 +1,1 @@
-# sonsoobin1102.github.io
-vivecoding project repository
+sonsoobin1102의 소개 페이지
